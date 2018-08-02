@@ -11,6 +11,8 @@ import site.binghai.lib.utils.BaseBean;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BaseController extends BaseBean {
 
@@ -22,6 +24,8 @@ public class BaseController extends BaseBean {
         return "commonResp";
     }
 
+    private static Map<Class, Object> instanceHolder = new HashMap<>();
+
     /**
      * 从thread local获取网络上下文
      */
@@ -29,7 +33,7 @@ public class BaseController extends BaseBean {
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
         ServletRequestAttributes servletRequestAttributes;
         if (requestAttributes instanceof ServletRequestAttributes) {
-            servletRequestAttributes = (ServletRequestAttributes) requestAttributes;
+            servletRequestAttributes = (ServletRequestAttributes)requestAttributes;
             return servletRequestAttributes.getRequest();
         }
         return null;
@@ -41,14 +45,22 @@ public class BaseController extends BaseBean {
 
     public <T extends SessionPersistent> T getSessionPersistent(Class<T> sp) {
         try {
-            T ins = sp.newInstance();
-            return (T) getServletRequest().getSession().getAttribute(ins.sessionTag());
+            T ins = getNewInstance(sp);
+            return (T)getServletRequest().getSession().getAttribute(ins.sessionTag());
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private <T extends SessionPersistent> T getNewInstance(Class<T> sp)
+        throws IllegalAccessException, InstantiationException {
+        if (instanceHolder.get(sp) == null) {
+            instanceHolder.put(sp, sp.newInstance());
+        }
+        return (T)instanceHolder.get(sp);
     }
 
     public <T extends SessionPersistent> void persistent(T entity) {
