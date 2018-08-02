@@ -6,6 +6,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import site.binghai.lib.entity.SessionDataBundle;
 import site.binghai.lib.interfaces.SessionPersistent;
 import site.binghai.lib.utils.BaseBean;
 
@@ -24,7 +25,7 @@ public class BaseController extends BaseBean {
         return "commonResp";
     }
 
-    private static Map<Class, Object> instanceHolder = new HashMap<>();
+    private static Map<Class, SessionPersistent> instanceHolder = new HashMap<>();
 
     /**
      * 从thread local获取网络上下文
@@ -45,8 +46,8 @@ public class BaseController extends BaseBean {
 
     public <T extends SessionPersistent> T getSessionPersistent(Class<T> sp) {
         try {
-            T ins = getNewInstance(sp);
-            return (T)getServletRequest().getSession().getAttribute(ins.sessionTag());
+            String tag = getInstanceTag(sp);
+            return (T)getServletRequest().getSession().getAttribute(tag);
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -55,12 +56,26 @@ public class BaseController extends BaseBean {
         return null;
     }
 
-    private <T extends SessionPersistent> T getNewInstance(Class<T> sp)
+    private <T extends SessionPersistent> String getInstanceTag(Class<T> sp)
         throws IllegalAccessException, InstantiationException {
         if (instanceHolder.get(sp) == null) {
             instanceHolder.put(sp, sp.newInstance());
         }
-        return (T)instanceHolder.get(sp);
+        return instanceHolder.get(sp).sessionTag();
+    }
+
+    public void setString2Session(String key, String value) {
+        SessionDataBundle bundle = getSessionPersistent(SessionDataBundle.class);
+        if (bundle == null) {
+            bundle = new SessionDataBundle();
+            persistent(bundle);
+        }
+        bundle.setAttribute(key, value);
+    }
+
+    public String getStringFromSession(String key) {
+        SessionDataBundle bundle = getSessionPersistent(SessionDataBundle.class);
+        return bundle == null ? null : bundle.getAttribute(key);
     }
 
     public <T extends SessionPersistent> void persistent(T entity) {
