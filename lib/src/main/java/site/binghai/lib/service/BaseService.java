@@ -13,7 +13,6 @@ import site.binghai.lib.utils.BaseBean;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -90,17 +89,14 @@ public abstract class BaseService<T extends BaseEntity> extends BaseBean {
     }
 
     public List<T> findByIds(List<Long> ids) {
-        List<T> rs = getDao().findAllById(ids);
-        return rs == null ? null : new ArrayList<>(rs);
+        return getDao().findAllById(ids);
     }
 
     public List<T> query(T example) {
         example.setCreated(null);
         example.setCreatedTime(null);
         Example<T> ex = Example.of(example);
-        List<T> rs = getDao().findAll(ex);
-
-        return rs == null ? null : new ArrayList<>(rs);
+        return getDao().findAll(ex);
     }
 
     public T queryOne(T example) {
@@ -115,19 +111,15 @@ public abstract class BaseService<T extends BaseEntity> extends BaseBean {
         example.setCreated(null);
         example.setCreatedTime(null);
         Example<T> ex = Example.of(example);
-        List<T> rs = getDao().findAll(ex, Sort.by(desc ? Sort.Direction.DESC : Sort.Direction.ASC, sortField));
-        return rs == null ? null : new ArrayList<>(rs);
-
+        return getDao().findAll(ex, Sort.by(desc ? Sort.Direction.DESC : Sort.Direction.ASC, sortField));
     }
 
     public List<T> findAll(int limit) {
-        List<T> rs = getDao().findAll(new PageRequest(0, limit)).getContent();
-        return rs == null ? null : new ArrayList<>(rs);
+        return getDao().findAll(new PageRequest(0, limit)).getContent();
     }
 
     public List<T> findAll(int page, int pageSize) {
-        List<T> rs = getDao().findAll(new PageRequest(page, pageSize)).getContent();
-        return rs == null ? null : new ArrayList<>(rs);
+        return getDao().findAll(new PageRequest(page, pageSize)).getContent();
     }
 
     public long count() {
