@@ -44,7 +44,7 @@ public abstract class BaseService<T extends BaseEntity> extends BaseBean {
     /**
      * 获取某列的所有case，适用于可以枚举的列
      * */
-    public List getDistinctString(String filed) {
+    public List distinctList(String filed) {
         List ls = entityManager.createQuery(
                 String.format("select distinct %s from %s", filed, getTypeArguement().getSimpleName()))
                 .getResultList();
