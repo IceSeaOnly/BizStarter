@@ -49,22 +49,21 @@ public abstract class BaseBean extends MapUtils {
         return TimeTools.currentTS();
     }
 
-    protected boolean noEmptyString(Collection<Object> strs) {
-        for (Object str : strs) {
-            if (str == null) return false;
-            if (StringUtils.isEmpty(str.toString()))
+    protected boolean hasEmptyString(Collection<String> strs) {
+        for (String str : strs) {
+            if (StringUtils.isEmpty(str))
                 return false;
         }
         return true;
     }
 
-    protected boolean noEmptyString(Object... strs) {
+    protected boolean hasEmptyString(Object... strs) {
         for (Object str : strs) {
-            if (str == null) return false;
+            if (str == null) return true;
             if (StringUtils.isEmpty(str.toString()))
-                return false;
+                return true;
         }
-        return true;
+        return false;
     }
 
 }
