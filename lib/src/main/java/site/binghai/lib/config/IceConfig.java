@@ -16,6 +16,11 @@ public class IceConfig {
     private String appName;
     private String appRoot;
 
+    private String miaodiSms_ACCOUNT_SID;
+    private String miaodiSms_AUTH_TOKEN;
+
+    private String aliyunAccessKeyId;
+    private String aliyunAccessKeySecret;
 
     private static Map<String, String> setupParams = new HashMap<>();
 
