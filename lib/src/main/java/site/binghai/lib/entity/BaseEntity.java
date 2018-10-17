@@ -4,6 +4,11 @@ import site.binghai.lib.utils.TimeTools;
 
 import javax.persistence.MappedSuperclass;
 
+/**
+ * 具有支付状态的实体请继承 PayBizEntity
+ * @see PayBizEntity
+ * */
+
 @MappedSuperclass
 public abstract class BaseEntity {
     private Long created;

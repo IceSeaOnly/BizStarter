@@ -22,6 +22,12 @@ public class IceConfig {
     private String aliyunAccessKeyId;
     private String aliyunAccessKeySecret;
 
+
+    private String wxAuthenticationUrl;
+    private String wxValidateMD5Key;
+    private String wxPayUrl;
+    private String wxRefundUrl;
+
     private static Map<String, String> setupParams = new HashMap<>();
 
     public static String getSetupParam(String key) {
