@@ -35,9 +35,4 @@ public class WxUser extends BaseEntity implements SessionPersistent {
      * 余额
      */
     private Integer balance;
-
-    @Override
-    public String sessionTag() {
-        return "_WX_USER_";
-    }
 }
